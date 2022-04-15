@@ -197,24 +197,10 @@ app.layout = dbc.Container(
                     dbc.Row(
                         [html.Div([
                             html.H4("Top Chess Players by Nationality (FIDE)", style={'text-align': 'center'}),
-                            dcc.Slider(2000, 2015, 1, value=2011, id="slct_year",
+                            dcc.Slider(2000, 2015, 1, value=2000, id="slct_year",
                                        marks={
-                                           2000: 2000,
-                                           2001: 2001,
-                                           2002: 2002,
-                                           2003: 2003,
-                                           2004: 2004,
-                                           2005: 2005,
-                                           2006: 2006,
-                                           2007: 2007,
-                                           2008: 2008,
-                                           2009: 2009,
-                                           2010: 2010,
-                                           2011: 2011,
-                                           2012: 2012,
-                                           2013: 2013,
-                                           2014: 2014,
-                                           2015: 2015
+                                           int(h) : {'label' : int(h),
+                                                     'style':{'color':'#000000'}} for h in range(2000, 2016)
                                        }
                                        ),
 
@@ -260,7 +246,7 @@ def update_map(option_slctd):
                             color_continuous_scale='temps',
                              width=1500,
                              height=600)
-    fig.update_layout(xaxis=dict(title="Top Chess Players by Nationality (FIDE)"),paper_bgcolor="#753422", plot_bgcolor="#753422", dragmode=False)
+    fig.update_layout(xaxis=dict(),paper_bgcolor="#753422", plot_bgcolor="#753422", dragmode=False, font=dict(size=16, color='black'))
     return container,fig
 
 
