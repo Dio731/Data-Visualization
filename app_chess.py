@@ -10,6 +10,7 @@ import plotly.graph_objs as go
 import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy as np
+import re
 
 
 app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP],meta_tags=[
@@ -18,6 +19,11 @@ app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP],meta_tags=[
 app.title = "Chess Statistics"
 
 df = pd.read_csv('games.csv')
+
+color_1 = '#faf3f0'
+color_2 = '#f0bdb3'
+color_3 = '#f5e7e1'
+text_color = '#0e0705'
 
 min_white_rating = df['white_rating'].min()
 max_white_rating = df['white_rating'].max()
@@ -54,6 +60,15 @@ def squares_dictionary_maker():
             
     return dictionary
 
+def captured_moves(column):
+    captured_list = []
+    for i in range(len(column)):
+        moves_list = column[i].split()
+        for i in range(len(moves_list)):
+            pattern = re.compile(r'x')
+            if pattern.findall(moves_list[i]):
+                captured_list.append(moves_list[i])
+    return pd.Series(captured_list)
 
 # sq_dict = squares_dictionary_maker()
 
@@ -128,7 +143,7 @@ app.layout = dbc.Container(
                             ]
                         ),
 
-                    ],style={"background-color":'#B05B3B'},md=2
+                    ],style={"background-color":color_2},md=2
                 ),
                 dbc.Col(
                     [
@@ -145,8 +160,8 @@ app.layout = dbc.Container(
                             [
                                 dbc.Card(
                                     [
-                                        dbc.CardHeader('The Number of Turns Distribution',className='text-center fs-3',style={'background-color':'#B05B3B'}),
-                                        dbc.CardBody(id='turns_dist_graph',style={'background-color':'#753422'})
+                                        dbc.CardHeader('The Number of Turns Distribution',className='text-center fs-3',style={'background-color':color_2}),
+                                        dbc.CardBody(id='turns_dist_graph',style={'background-color':color_3})
                                     ],className="shadow p-0 mb-3 bg-white rounded border-light"
                                 )
         
@@ -156,8 +171,8 @@ app.layout = dbc.Container(
                             [
                                 dbc.Card(
                                     [
-                                        dbc.CardHeader('Victory Status',className='text-center fs-3',style={'background-color':'#B05B3B'}),
-                                        dbc.CardBody(id='victory_status_graph',style={'background-color':'#753422'})
+                                        dbc.CardHeader('Victory Status',className='text-center fs-3',style={'background-color':color_2}),
+                                        dbc.CardBody(id='victory_status_graph',style={'background-color':color_3})
                                     ],className="shadow p-0 mb-3 bg-white rounded border-light"
                                 )
                             ],md=6
@@ -171,8 +186,8 @@ app.layout = dbc.Container(
                             [
                                 dbc.Card(
                                     [
-                                        dbc.CardHeader('Opening Statistics',className='text-center fs-3',style={'background-color':'#B05B3B'}),
-                                        dbc.CardBody(id='opening_stats_graph',style={'background-color':'#753422'})
+                                        dbc.CardHeader('Opening Statistics',className='text-center fs-3',style={'background-color':color_2}),
+                                        dbc.CardBody(id='opening_stats_graph',style={'background-color':color_3})
         
                                     ],className="shadow p-0 mb-3 bg-white rounded border-light"
                                 )
@@ -183,8 +198,8 @@ app.layout = dbc.Container(
                             [
                                 dbc.Card(
                                     [
-                                        dbc.CardHeader('Heatmap of where pieces are captured',className='text-center fs-3',style={'background-color':'#B05B3B'}),
-                                        dbc.CardBody(id='pieces-captured-graph',style={'background-color':'#753422'})
+                                        dbc.CardHeader('Captured pieces',className='text-center fs-3',style={'background-color':color_2}),
+                                        dbc.CardBody(id='pieces-captured-graph',style={'background-color':color_3})
         
                                     ],className="shadow p-0 mb-3 bg-white rounded border-light"
                                 )
@@ -194,7 +209,7 @@ app.layout = dbc.Container(
                     ]
                 )
 
-                    ],style={'background-color':'#D79771'},md=10
+                    ],style={'background-color':color_1},md=10
                 )
             ]
         )
@@ -251,12 +266,12 @@ def update_graph(white_slider,black_slider,increment_value):
 
     fig1.add_trace(go.Histogram(
                          x=df_final['turns'],
-                        #  name=sentiment,
-                        #  orientation='h',
-                        #  marker=dict(color="rgb(99, 110, 250)")
+                         #name=sentiment,
+                         #orientation='h',
+                         marker=dict(color="rgb(99, 110, 250)")
                          )
                 )
-    fig1.update_layout(xaxis=dict(title='Number of Turns'),font_color='#fff',font_size=14,paper_bgcolor="#753422",plot_bgcolor="#753422",margin=dict(t=0))
+    fig1.update_layout(xaxis=dict(title='Number of Turns'),font_color=text_color,font_size=14,paper_bgcolor=color_3,plot_bgcolor=color_3,margin=dict(t=0))
     fig1.update_xaxes(showline=True, linewidth=1, linecolor='rgba(61,61,61,0.5)',showgrid=False,zeroline=False)
     fig1.update_yaxes(showline=True, linewidth=1, linecolor='rgba(61,61,61,0.5)',showgrid=False,zeroline=False)
 
@@ -272,7 +287,7 @@ def update_graph(white_slider,black_slider,increment_value):
             name= status
         ))
 
-    fig2.update_layout(xaxis=dict(title='Winners'),barmode='group',font_color='#fff',font_size=14,paper_bgcolor="#753422",plot_bgcolor="#753422",margin=dict(t=0))
+    fig2.update_layout(xaxis=dict(title='Winners'),barmode='group',font_color=text_color,font_size=14,paper_bgcolor=color_3,plot_bgcolor=color_3,margin=dict(t=0))
     fig2.update_xaxes(showline=True, linewidth=1, linecolor='rgba(61,61,61,0.5)',showgrid=False,zeroline=False)
     fig2.update_yaxes(showline=True, linewidth=1, linecolor='rgba(61,61,61,0.5)',showgrid=False,zeroline=False)
 
@@ -288,7 +303,7 @@ def update_graph(white_slider,black_slider,increment_value):
                       x=df_opening.index[:20],
                       y=df_opening['id'][:20]
     ))
-    fig3.update_layout(xaxis=dict(title='Opening Name'),font_color='#fff',font_size=14,paper_bgcolor="#753422",plot_bgcolor="#753422",margin=dict(t=0))
+    fig3.update_layout(xaxis=dict(title='Opening Name'),font_color=text_color,font_size=14,paper_bgcolor=color_3,plot_bgcolor=color_3,margin=dict(t=0))
     fig3.update_xaxes(tickangle = 45,showline=True, linewidth=1, linecolor='rgba(61,61,61,0.5)',showgrid=False,zeroline=False)
     fig3.update_yaxes(showline=True, linewidth=1, linecolor='rgba(61,61,61,0.5)',showgrid=False,zeroline=False)
 
@@ -297,19 +312,20 @@ def update_graph(white_slider,black_slider,increment_value):
     global sq_dict 
     sq_dict = squares_dictionary_maker()
 
-    len(np.vectorize(board_heatmap)(df_final['moves']))
+    len(np.vectorize(board_heatmap)(captured_moves(df_final['moves'])))
 
 
     heatmap_frame = pd.DataFrame(dict_formatter(sq_dict))
-    heatmap_frame.index = ['8', '7', '6', '5', '4', '3', '2', '1']
+    heatmap_frame.index = ['1', '2', '3', '4', '5', '6', '7', '8']
     heatmap_frame.columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     
     fig4.add_trace(go.Heatmap(
                         z=heatmap_frame,
                         y=heatmap_frame.index,
-                        x=heatmap_frame.columns))
-
-    fig4.update_layout(font_color='#fff',font_size=14,paper_bgcolor="#753422",plot_bgcolor="#753422",margin=dict(t=0,b=0))
+                        x=heatmap_frame.columns,
+                        colorscale = 'Viridis'))
+    fig4.update_traces(hovertemplate="%{x}%{y}: %{z}<extra></extra>",colorbar_exponentformat="none", selector=dict(type='heatmap'))
+    fig4.update_layout(font_color=text_color,font_size=14,paper_bgcolor=color_3,plot_bgcolor=color_3,margin=dict(t=0,b=0))
     
 
     return [dcc.Graph(figure=fig1),dcc.Graph(figure=fig2),dcc.Graph(figure=fig3),dcc.Graph(figure=fig4)]
