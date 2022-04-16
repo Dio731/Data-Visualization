@@ -10,6 +10,7 @@ import plotly.graph_objs as go
 import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy as np
+import plotly.express as px
 import re
 
 
@@ -19,6 +20,7 @@ app = dash.Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP],meta_tags=[
 app.title = "Chess Statistics"
 
 df = pd.read_csv('games.csv')
+country_df = pd.read_csv('country_df.csv')
 
 color_1 = '#faf3f0'
 color_2 = '#f0bdb3'
@@ -207,15 +209,25 @@ app.layout = dbc.Container(
                             ],md=6
                         )
                     ]
-                )
+                ),
+                        dbc.Row(
+                            [html.Div([
+                                html.H4("Top Chess Players by Nationality (FIDE)", style={'text-align': 'center'}),
+                                dcc.Slider(2000, 2015, 1, value=2000, id="slct_year",
+                                           marks={
+                                               int(h): {'label': int(h),
+                                                        'style': {'color': '#000000'}} for h in range(2000, 2016)
+                                           }
+                                           ),
 
+                                html.Div(id='output_container', children=[]),
+                                html.Br(),
+                                dcc.Graph(id='nationality_map', figure={}, style={'background-color': '#753422'}),
+                            ])])
                     ],style={'background-color':color_1},md=10
                 )
             ]
         )
-        
-
-
     ],fluid=True
 )
 
@@ -226,6 +238,28 @@ app.layout = dbc.Container(
 
 def update_label(white_value,black_value):
     return ["Range Selected for White Player Rating: "+str(white_value[0])+" - "+str(white_value[1]), "Range Selected for Black Player Rating: "+str(black_value[0])+" - "+str(black_value[1]) ]
+
+
+@callback(
+        [Output(component_id='output_container', component_property='children'),
+         Output(component_id='nationality_map', component_property='figure')],
+        [Input(component_id='slct_year', component_property='value')]
+)
+
+def update_map(option_slctd):
+    container = "The year chosen by user was: {}".format(option_slctd)
+    dff = country_df.copy()
+    dff = dff[dff["year"] == option_slctd]
+    fig = px.choropleth(dff, locations="country",
+                            color="Country Count",
+                            hover_name="country",
+                            animation_frame="year", animation_group="country",
+                            color_continuous_scale='temps',
+                             width=1500,
+                             height=600)
+    fig.update_layout(xaxis=dict(),paper_bgcolor="#753422", plot_bgcolor="#753422", dragmode=False, font=dict(size=16, color='black'))
+    return container,fig
+
 
 @callback(
     [Output('turns_dist_graph','children'),Output('victory_status_graph','children'),Output('opening_stats_graph','children'),Output('pieces-captured-graph','children')],
