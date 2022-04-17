@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Apr 14 08:39:02 2022
 
-@author: Henrique Barreiros
-"""
 import dash 
 from dash import dcc, html, Input, Output, callback
 import plotly.graph_objs as go
