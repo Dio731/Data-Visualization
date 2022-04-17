@@ -166,7 +166,6 @@ app.layout = dbc.Container(
                                         dbc.CardBody(id='turns_dist_graph',style={'background-color':color_3})
                                     ],className="shadow p-0 mb-3 bg-white rounded border-light"
                                 )
-        
                             ],md=6
                         ),
                         dbc.Col(
@@ -210,26 +209,28 @@ app.layout = dbc.Container(
                         )
                     ]
                 ),
-                        dbc.Row(
-                            [html.Div([
-                                html.H4("Top Chess Players by Nationality (FIDE)", style={'text-align': 'center'}),
-                                dcc.Slider(2000, 2015, 1, value=2000, id="slct_year",
-                                           marks={
-                                               int(h): {'label': int(h),
-                                                        'style': {'color': '#000000'}} for h in range(2000, 2016)
-                                           }
-                                           ),
+                    dbc.Row(
+                        [html.Div([
+                            html.H4("Top Chess Players by Nationality (FIDE)", style={'text-align': 'center'}),
+                            dcc.Slider(2000, 2017, 1, value=2000, id="slct_year",
+                                        marks={
+                                            int(h): {'label': int(h),
+                                                    'style': {'color': '#000000'}} for h in range(2000, 2018)
+                                        }
+                                        ),
 
-                                html.Div(id='output_container', children=[]),
-                                html.Br(),
-                                dcc.Graph(id='nationality_map', figure={}, style={'background-color': color_3}),
-                            ])])
+                            html.Div(id='output_container', children=[]),
+                            html.Br(),
+                            dcc.Graph(id='nationality_map', figure={}, style={'background-color': color_3}),
+                        ])])
+
                     ],style={'background-color':color_1},md=10
                 )
             ]
         )
     ],fluid=True
 )
+
 
 @callback(
     [Output('white-player-rating','children'),Output('black-player-rating','children')],
