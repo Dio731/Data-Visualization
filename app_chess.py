@@ -222,7 +222,7 @@ app.layout = dbc.Container(
 
                                 html.Div(id='output_container', children=[]),
                                 html.Br(),
-                                dcc.Graph(id='nationality_map', figure={}, style={'background-color': '#753422'}),
+                                dcc.Graph(id='nationality_map', figure={}, style={'background-color': color_3}),
                             ])])
                     ],style={'background-color':color_1},md=10
                 )
@@ -257,7 +257,7 @@ def update_map(option_slctd):
                             color_continuous_scale='temps',
                              width=1500,
                              height=600)
-    fig.update_layout(xaxis=dict(),paper_bgcolor="#753422", plot_bgcolor="#753422", dragmode=False, font=dict(size=16, color='black'))
+    fig.update_layout(xaxis=dict(),paper_bgcolor=color_3, plot_bgcolor=color_3, dragmode=False, font=dict(size=16, color='black'))
     return container,fig
 
 
